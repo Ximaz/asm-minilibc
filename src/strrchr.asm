@@ -22,11 +22,10 @@ global strrchr
 strrchr:
 %endif
     call .Lstrlen
-    dec rax
 
     .while:
     cmp rax, 0
-    je .null_ret
+    jl .null_ret
 
     cmp byte [rdi+rax], sil
     jne .continue
