@@ -17,7 +17,7 @@ strlen:
 
 strrchr:
     call strlen
-    sub rax
+    dec rax
 
     .while:
     cmp byte [rdi*1+rax], 0
