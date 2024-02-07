@@ -7,7 +7,7 @@ section .text
 
     .strlen_while:
     cmp byte [rdi+rax], 0
-    jnz .strlen_continue
+    jne .strlen_continue
 
     ret
 
@@ -22,31 +22,42 @@ _strpbrk:
 global strpbrk
 strpbrk:
 %endif
-    xor r8, r8
+    xor rcx, rcx
 
     call .Lstrlen
-    mov r10, rax
+    cmp rax, 0
+    je .fast_end
+    mov rdx, rax
+
     push rdi
     mov rdi, rsi
     call .Lstrlen
-    mov r11, rax
     pop rdi
+    cmp rax, 0
+    je .fast_end
+    mov r9, rax
     xor rax, rax
 
-    jmp .for_r8_in_range_len_rdi
-    .increment_r8:
-    inc r8
-    .for_r8_in_range_len_rdi:
-    xor r9, r9
-    .for_r9_in_range_len_rsi:
-    cmp r9, r11
-    je .for_r8_in_range_len_rdi
-    mov al, byte [rdi + r8]
-    cmp al, byte [rsi + r9]
+    jmp .for_rcx_in_range_len_rdi
+    .increment_rcx:
+    inc rcx
+    .for_rcx_in_range_len_rdi:
+    xor r8, r8
+    .for_r8_in_range_len_rsi:
+    cmp r8, r9
+    je .for_rcx_in_range_len_rdi
+    mov al, byte [rdi + rcx]
+    cmp al, byte [rsi + r8]
     je .end
-    inc r9
-    jmp .increment_r8
+    inc r8
+    jmp .increment_rcx
 
     .end:
-    lea rax, [rdi+r8]
+    cmp rcx, rdx
+    jge .fast_end
+    lea rax, [rdi+rcx]
+    ret
+
+    .fast_end:
+    xor rax, rax
     ret

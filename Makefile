@@ -28,6 +28,10 @@ tests_run:	$(OBJS) $(TESTS_OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -lcriterion
 	./unit_tests
 
+main:	$(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) main.c -o program
+	./program
+
 clean:
 	$(RM) $(OBJS)
 	$(RM) $(TESTS_OBJS)
