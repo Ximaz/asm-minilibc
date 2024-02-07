@@ -20,14 +20,17 @@ strrchr:
     dec rax
 
     .while:
-    cmp byte [rdi*1+rax], 0
-    jz .return
+    cmp rax, 0
+    je .null_ret
 
     cmp byte [rdi*1+rax], sil
-    jnz .continue
+    jne .continue
 
-    .return:
     lea rax, [rdi*1+rax]
+    ret
+
+    null_ret:
+    xor rax, rax
     ret
 
     .continue:
