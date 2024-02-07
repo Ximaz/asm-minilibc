@@ -17,10 +17,13 @@ strchr:
     cmp byte [rdi+rax], sil
     jne .continue
 
+    .ret:
     lea rax, [rdi+rax]
     ret
 
     .null_ret:
+    cmp sil, 0
+    je .ret
     xor rax, rax
     ret
 

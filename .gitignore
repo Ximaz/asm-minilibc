@@ -1,0 +1,5 @@
+*.o
+program
+main.c
+libasm.so
+.vscode
