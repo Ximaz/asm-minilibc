@@ -63,3 +63,9 @@ Test(_strchr, empty_string) {
     char *result_libc = strchr(str, character);
     cr_assert_eq(result_custom, result_libc, "Empty string test failed.");
 }
+
+Test(_strchr, null) {
+    const char *str = NULL;
+    int character = 'a';
+    CMP_CRASH_2(strrchr, _strchr, str, character);
+}
