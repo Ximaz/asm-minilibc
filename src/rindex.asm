@@ -1,22 +1,26 @@
 BITS 64
 section .text
-global rindex
-global _rindex
-strlen:
+.Lstrlen:
     xor rax, rax
 
-    .while:
-    cmp byte [rdi*1+rax], 0
-    jnz .continue
+    .strlen_while:
+    cmp byte [rdi+rax], 0
+    jnz .strlen_continue
 
     ret
 
-    .continue:
+    .strlen_continue:
     inc rax
-    jmp .while
-rindex:
+    jmp .strlen_while
+
+%if CRITERION
+global _rindex
 _rindex:
-    call strlen
+%else
+global rindex
+rindex:
+%endif
+    call .Lstrlen
 
     .while:
     cmp rax, 0
@@ -24,9 +28,9 @@ _rindex:
 
     dec rax
 
-    cmp byte [rdi*1+rax], sil
+    cmp byte [rdi+rax], sil
     jne .while
 
     .return:
-    lea rax, [rdi*1+rax]
+    lea rax, [rdi+rax]
     ret

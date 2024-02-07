@@ -1,9 +1,12 @@
 BITS 64
 section .text
-global memmove
-
-memmove:
+%if CRITERION
+global _memmove
 _memmove:
+%else
+global memmove
+memmove:
+%endif
     mov rax, rdi
     cmp rdi, rsi
     je .end             ;; rdi == rsi, nothing to do

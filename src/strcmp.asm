@@ -1,9 +1,13 @@
 BITS 64
 section .text
-global _strcmp
 
-strcmp:
+%if CRITERION
+global _strcmp
 _strcmp:
+%else
+global strcmp
+strcmp:
+%endif
     xor rax, rax
     xor rbx, rbx
     xor rcx, rcx

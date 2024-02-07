@@ -1,18 +1,23 @@
 BITS 64
 section .text
-global memset
 
+%if CRITERION
+global _memset
+_memset:
+%else
+global memset
 memset:
+%endif
     xor rcx, rcx
 
     .while:
     cmp rcx, rdx
     jnz .continue
 
-    lea rax, [rdi]
+    mov rax, rdi
     ret
 
     .continue:
-    mov [rdi*1+rcx], rsi
+    mov [rdi+rcx], rsi
     inc rcx
     jmp .while

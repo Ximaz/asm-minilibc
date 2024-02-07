@@ -1,72 +1,76 @@
 BITS 64
 section .text
-global strstr
-global _strstr
-strlen:
+.Lstrlen:
     xor rax, rax
 
-    .while:
-    cmp byte [rdi*1+rax], 0
-    jnz .continue
+    .strlen_while:
+    cmp byte [rdi+rax], 0
+    jnz .strlen_continue
 
     ret
 
-    .continue:
+    .strlen_continue:
     inc rax
-    jmp .while
+    jmp .strlen_while
 
-strncmp:
+.Lstrncmp:
     xor rax, rax
     xor rbx, rbx
     xor rcx, rcx
 
     cmp rdx, 0
-    je .while
+    je .strncmp_while
     dec rdx
 
-    .while:
+    .strncmp_while:
     mov bl, byte[rdi + rax]
     mov cl, byte[rsi + rax]
 
     cmp rax, rdx
-    je .end
+    je .strncmp_end
 
     cmp bl, 0
-    je .end
+    je .strncmp_end
 
     cmp cl, 0
-    je .end
+    je .strncmp_end
 
     cmp bl, cl
-    jne .end
+    jne .strncmp_end
 
     inc rax
-    jmp .while
+    jmp .strncmp_while
 
-    .end:
+    .strncmp_end:
     xor rax, rax
     mov rax, rbx
     sub rax, rcx
     ret
-strstr:
+
+%if CRITERION
+global _strstr
 _strstr:
+%else
+global strstr
+strstr:
+%endif
     push rdi
     mov rdi, rsi
-    call strlen
+    call .Lstrlen
     mov rdx, rax
     pop rdi
 
     push rdi
     .while:
-    cmp byte [rdi], 0
+    cmp dil, 0
     je .end
-    call strncmp
+    call .Lstrncmp
     cmp rax, 0
     je .end
     inc rdi
     jmp .while
 
     .end:
-    lea rax, [rdi]
+    mov rax, rdi
     pop rdi
     ret

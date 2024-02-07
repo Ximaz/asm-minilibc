@@ -2,30 +2,33 @@ BITS 64
 
 section .text
 
-global strcspn
-global _strcspn
-strlen:
+.Lstrlen:
     xor rax, rax
 
-    .while:
-    cmp byte [rdi*1+rax], 0
-    jnz .continue
+    .strlen_while:
+    cmp byte [rdi+rax], 0
+    jnz .strlen_continue
 
     ret
 
-    .continue:
+    .strlen_continue:
     inc rax
-    jmp .while
+    jmp .strlen_while
 
-strcspn:
+%if CRITERION
+global _strcspn
 _strcspn:
+%else
+global strcspn
+strcspn:
+%endif
     xor r8, r8
 
-    call strlen
+    call .Lstrlen
     mov r10, rax
     push rdi
     mov rdi, rsi
-    call strlen
+    call .Lstrlen
     mov r11, rax
     pop rdi
     xor rax, rax

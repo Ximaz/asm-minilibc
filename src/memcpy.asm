@@ -1,9 +1,14 @@
 BITS 64
 
 section .text
-global memcpy
 
+%if CRITERION
+global _memcpy
+_memcpy:
+%else
+global memcpy
 memcpy:
+%endif
     xor rax, rax
     xor rcx, rcx
 
@@ -11,11 +16,11 @@ memcpy:
     cmp rcx, rdx
     jnz .continue
 
-    lea rax, [rdi]
+    mov rax, rdi
     ret
 
     .continue:
     mov al, [rsi*1+rcx]
-    mov byte [rdi*1+rcx], al
+    mov byte [rdi+rcx], al
     inc rcx
     jmp .while

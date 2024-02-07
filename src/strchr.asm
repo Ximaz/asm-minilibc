@@ -1,18 +1,23 @@
 BITS 64
 section .text
-global strchr
 
+%if CRITERION
+global _strchr
+_strchr:
+%else
+global strchr
 strchr:
+%endif
     xor rax, rax
 
     .while:
-    cmp byte [rdi*1+rax], 0
+    cmp byte [rdi+rax], 0
     je .null_ret
 
-    cmp byte [rdi*1+rax], sil
+    cmp byte [rdi+rax], sil
     jne .continue
 
-    lea rax, [rdi*1+rax]
+    lea rax, [rdi+rax]
     ret
 
     .null_ret:

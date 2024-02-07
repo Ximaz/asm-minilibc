@@ -2,11 +2,13 @@ BITS 64
 
 section .text
 
-global strcasecmp
+%if CRITERION
 global _strcasecmp
-
-strcasecmp:
 _strcasecmp:
+%else
+global strcasecmp
+strcasecmp:
+%endif
     xor rbx, rbx
     xor rax, rax
     xor rcx, rcx

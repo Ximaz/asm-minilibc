@@ -1,12 +1,16 @@
 BITS 64
 section .text
+%if CRITERION
+global _strlen
+_strlen:
+%else
 global strlen
-
 strlen:
+%endif
     xor rax, rax
 
     .while:
-    cmp byte [rdi*1+rax], 0
+    cmp byte [rdi+rax], 0
     jnz .continue
 
     ret

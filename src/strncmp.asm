@@ -1,10 +1,13 @@
 BITS 64
 section .text
 
-global strncmp
-
-strncmp:
+%if CRITERION
+global _strncmp
 _strncmp:
+%else
+global strncmp
+strncmp:
+%endif
     xor rax, rax
     xor rbx, rbx
     xor rcx, rcx
