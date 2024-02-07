@@ -9,7 +9,7 @@ global strncmp
 strncmp:
 %endif
     xor rax, rax
-    xor rbx, rbx
+    xor r8, r8
     xor rcx, rcx
 
     cmp rdx, 0
@@ -17,19 +17,19 @@ strncmp:
     dec rdx
 
     .while:
-    mov bl, byte[rdi + rax]
+    mov r8b, byte[rdi + rax]
     mov cl, byte[rsi + rax]
 
     cmp rax, rdx
     je .end
 
-    cmp bl, 0
+    cmp r8b, 0
     je .end
 
     cmp cl, 0
     je .end
 
-    cmp bl, cl
+    cmp r8b, cl
     jne .end
 
     inc rax
@@ -37,6 +37,6 @@ strncmp:
 
     .end:
     xor rax, rax
-    mov rax, rbx
+    mov rax, r8
     sub rax, rcx
     ret

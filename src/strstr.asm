@@ -15,7 +15,7 @@ section .text
 
 .Lstrncmp:
     xor rax, rax
-    xor rbx, rbx
+    xor r8, r8
     xor rcx, rcx
 
     cmp rdx, 0
@@ -23,19 +23,19 @@ section .text
     dec rdx
 
     .strncmp_while:
-    mov bl, byte[rdi + rax]
+    mov r8b, byte[rdi + rax]
     mov cl, byte[rsi + rax]
 
     cmp rax, rdx
     je .strncmp_end
 
-    cmp bl, 0
+    cmp r8b, 0
     je .strncmp_end
 
     cmp cl, 0
     je .strncmp_end
 
-    cmp bl, cl
+    cmp r8b, cl
     jne .strncmp_end
 
     inc rax
@@ -43,7 +43,7 @@ section .text
 
     .strncmp_end:
     xor rax, rax
-    mov rax, rbx
+    mov rax, r8
     sub rax, rcx
     ret
 
@@ -60,17 +60,23 @@ strstr:
     mov rdx, rax
     pop rdi
 
-    push rdi
+    xor rcx, rcx
+
     .while:
-    cmp dil, 0
-    je .end
+    cmp byte [rdi + rcx], 0
+    je .null_ret
+    push rcx
     call .Lstrncmp
+    pop rcx
     cmp rax, 0
     je .end
-    inc rdi
+    inc rcx
     jmp .while
 
+    .null_ret:
+    xor rax, rax
+    ret
+
     .end:
-    mov rax, rdi
-    pop rdi
+    lea rax, [rdi + rcx]
     ret

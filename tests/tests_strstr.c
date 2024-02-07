@@ -1,59 +1,65 @@
 #include "tests.h"
 
-Test(_strcmp, equal_strings) {
-    const char *s1 = "hello";
-    const char *s2 = "hello";
-    int result_custom = _strcmp(s1, s2);
-    int result_libc = strcmp(s1, s2);
-    cr_assert_eq(result_custom, result_libc, "Comparison failed for equal strings.");
+Test(_strstr, needle_found) {
+    const char *haystack = "hello world";
+    const char *needle = "world";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Needle not found when it should have been.");
 }
 
-Test(_strcmp, s1_greater_than_s2) {
-    const char *s1 = "world";
-    const char *s2 = "hello";
-    int result_custom = _strcmp(s1, s2);
-    int result_libc = strcmp(s1, s2);
-    cr_assert_eq(result_custom, result_libc, "Comparison failed for s1 greater than s2.");
+Test(_strstr, needle_not_found) {
+    const char *haystack = "hello world";
+    const char *needle = "foo";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Needle found when it shouldn't have been.");
 }
 
-Test(_strcmp, s1_less_than_s2) {
-    const char *s1 = "apple";
-    const char *s2 = "banana";
-    int result_custom = _strcmp(s1, s2);
-    int result_libc = strcmp(s1, s2);
-    cr_assert_eq(result_custom, result_libc, "Comparison failed for s1 less than s2.");
+Test(_strstr, needle_empty) {
+    const char *haystack = "hello world";
+    const char *needle = "";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Empty needle test failed.");
 }
 
-Test(_strcmp, empty_string) {
-    const char *s1 = "";
-    const char *s2 = "";
-    int result_custom = _strcmp(s1, s2);
-    int result_libc = strcmp(s1, s2);
-    cr_assert_eq(result_custom, result_libc, "Comparison failed for empty strings.");
+Test(_strstr, haystack_empty) {
+    const char *haystack = "";
+    const char *needle = "world";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Empty haystack test failed.");
 }
 
-Test(_strcmp, null_strings) {
-    const char *s1 = NULL;
-    const char *s2 = NULL;
-    CMP_CRASH_2(strcmp, _strcmp, s1, s2);
+Test(_strstr, both_empty) {
+    const char *haystack = "";
+    const char *needle = "";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Both empty strings test failed.");
 }
 
-Test(_strcmp, s1_null) {
-    const char *s1 = NULL;
-    const char *s2 = "hello";
-    CMP_CRASH_2(strcmp, _strcmp, s1, s2);
+Test(_strstr, needle_longer_than_haystack) {
+    const char *haystack = "hello";
+    const char *needle = "hello world";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Needle longer than haystack test failed.");
 }
 
-Test(_strcmp, s2_null) {
-    const char *s1 = "hello";
-    const char *s2 = NULL;
-    CMP_CRASH_2(strcmp, _strcmp, s1, s2);
+Test(_strstr, needle_at_beginning) {
+    const char *haystack = "hello world";
+    const char *needle = "hello";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Needle at beginning test failed.");
 }
 
-Test(_strcmp, mixed_case) {
-    const char *s1 = "HeLLo";
-    const char *s2 = "hello";
-    int result_custom = _strcmp(s1, s2);
-    int result_libc = strcmp(s1, s2);
-    cr_assert_eq(result_custom, result_libc, "Comparison failed for mixed case strings.");
+Test(_strstr, needle_at_end) {
+    const char *haystack = "hello world";
+    const char *needle = "world";
+    char *result_custom = _strstr(haystack, needle);
+    char *result_libc = strstr(haystack, needle);
+    cr_assert_eq(result_custom, result_libc, "Needle at end test failed.");
 }
