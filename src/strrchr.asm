@@ -29,7 +29,7 @@ strrchr:
     lea rax, [rdi*1+rax]
     ret
 
-    null_ret:
+    .null_ret:
     xor rax, rax
     ret
 
