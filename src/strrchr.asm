@@ -1,6 +1,6 @@
 BITS 64
 section .text
-global strchr
+global strrchr
 
 strlen:
     xor rax, rax
