@@ -7,6 +7,11 @@ _memmove:
 global memmove
 memmove:
 %endif
+    cmp rdi, 0
+    je .end
+    cmp rsi, 0
+    je .end
+
     mov rax, rdi
     cmp rdi, rsi
     je .end             ;; rdi == rsi, nothing to do
