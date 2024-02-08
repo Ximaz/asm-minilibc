@@ -8,13 +8,12 @@ _memset:
 global memset
 memset:
 %endif
+    mov rax, rdi
     xor rcx, rcx
 
     .while:
     cmp rcx, rdx
     jnz .continue
-
-    mov rax, rdi
     ret
 
     .continue:
