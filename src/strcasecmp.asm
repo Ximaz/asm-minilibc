@@ -9,32 +9,30 @@ _strcasecmp:
 global strcasecmp
 strcasecmp:
 %endif
-    xor rbx, rbx
-    xor rax, rax
     xor rcx, rcx
+    xor r8, r8
+    xor r9, r9
 
     .while:
-    mov al, byte[rdi + rbx]
-    mov cl, byte[rsi + rbx]
-    inc rbx
+    mov r8b, byte[rdi + rcx]
+    mov r9b, byte[rsi + rcx]
+    inc rcx
 
-    cmp al, 0
+    cmp r8b, 0
     je .end
 
-    cmp cl, 0
+    cmp r9b, 0
     je .end
     
-    xor al, 0b1111111
-    and al, cl
-    shl ax, 2
-    test al, 0b1111100
-    jz .while
+    xor r8b, r9b
+    cmp r8b, 32
+    jne .end
+    jmp .while
 
     .end:
-    dec rbx
-    mov al, byte [rdi + rbx]
-    xor rbx, rbx
-    mov rbx, rbx
-    sub rbx, rcx
-    mov rax, rbx
+    xor rax, rax
+    dec rcx
+    mov r8b, byte [rdi + rcx]
+    mov rax, r8
+    sub rax, r9
     ret
