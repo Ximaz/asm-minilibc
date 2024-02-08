@@ -16,7 +16,6 @@ Test(_strcspn, compare_with_libc) {
     result_custom = _strcspn(str2, reject2);
     result_libc = strcspn(str2, reject2);
 
-    printf("%ld %ld\n", result_custom, result_libc);
     cr_assert_eq(result_custom, result_libc, "Custom strcspn result does not match libc strcspn.");
 
     const char* str3 = "hello world";
@@ -34,4 +33,10 @@ Test(_strcspn, compare_with_libc) {
     result_libc = strcspn(str4, reject4);
 
     cr_assert_eq(result_custom, result_libc, "Custom strcspn result does not match libc strcspn.");
+}
+
+Test(_strcspn, null_ptr) {
+    CMP_CRASH_2(strcspn, _strcspn, NULL, "valid");
+    CMP_CRASH_2(strcspn, _strcspn, "valid", NULL);
+    CMP_CRASH_2(strcspn, _strcspn, NULL, NULL);
 }
