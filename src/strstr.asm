@@ -47,6 +47,7 @@ section .text
     sub rax, rcx
     ret
 
+
 %if CRITERION
 global _strstr
 _strstr:
@@ -54,29 +55,34 @@ _strstr:
 global strstr
 strstr:
 %endif
-    push rdi
-    mov rdi, rsi
+    xchg rdi, rsi
     call .Lstrlen
     mov rdx, rax
-    pop rdi
+    xchg rdi, rsi
 
-    xor rcx, rcx
+    cmp rax, 0
+    je .found
 
     .while:
-    cmp byte [rdi + rcx], 0
-    je .null_ret
-    push rcx
+    cmp byte [rdi], 0
+    je .check_for_empty_needle
     call .Lstrncmp
-    pop rcx
     cmp rax, 0
-    je .end
-    inc rcx
+    je .found
+    inc rdi
     jmp .while
 
-    .null_ret:
-    xor rax, rax
+    .check_for_empty_needle:
+    cmp byte [rsi], 0
+    je .found
+    jmp .not_found
+
+    .found:
+    cmp rax, 0
+    jne .not_found
+    mov rax, rdi
     ret
 
-    .end:
-    lea rax, [rdi + rcx]
+    .not_found:
+    xor rax, rax
     ret
