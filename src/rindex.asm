@@ -24,13 +24,18 @@ rindex:
 
     .while:
     cmp rax, 0
-    je .return
-
-    dec rax
+    jl .null_ret
 
     cmp byte [rdi+rax], sil
-    jne .while
+    jne .continue
 
-    .return:
     lea rax, [rdi+rax]
     ret
+
+    .null_ret:
+    xor rax, rax
+    ret
+
+    .continue:
+    dec rax
+    jmp .while
