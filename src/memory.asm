@@ -1,5 +1,29 @@
 BITS 64
 section .text
+
+%if CRITERION
+global _memcpy
+_memcpy:
+%else
+global memcpy
+memcpy:
+%endif
+    mov rax, rdi
+
+    xor rax, rax
+    xor rcx, rcx
+
+    .while:
+    cmp rcx, rdx
+    jnz .continue
+    ret
+
+    .continue:
+    mov al, [rsi*1+rcx]
+    mov byte [rdi+rcx], al
+    inc rcx
+    jmp .while
+
 %if CRITERION
 global _memmove
 _memmove:
@@ -43,3 +67,23 @@ memmove:
 
     .end:
     ret
+
+%if CRITERION
+global _memset
+_memset:
+%else
+global memset
+memset:
+%endif
+    mov rax, rdi
+    xor rcx, rcx
+
+    .while:
+    cmp rcx, rdx
+    jnz .continue
+    ret
+
+    .continue:
+    mov [rdi+rcx], rsi
+    inc rcx
+    jmp .while
