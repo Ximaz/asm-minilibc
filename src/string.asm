@@ -1,6 +1,5 @@
 BITS 64
 section .text
-global GDB_HERE
 
 %if CRITERION
 global _strlen
@@ -332,11 +331,8 @@ strcasecmp:
     je .while
 
     .end:
-GDB_HERE:
     dec rcx
     mov r8b, byte [rdi + rcx]
-    ;; mov rax, r8
-    ;; sub rax, r9
     movzx rax, r8b
     sub rax, r9
     ret
