@@ -1,5 +1,6 @@
 BITS 64
 section .text
+global GDB_HERE
 
 %if CRITERION
 global _strlen
@@ -307,6 +308,7 @@ _strcasecmp:
 global strcasecmp
 strcasecmp:
 %endif
+    xor rax, rax
     xor rcx, rcx
     xor r8, r8
     xor r9, r9
@@ -322,15 +324,19 @@ strcasecmp:
     cmp r9b, 0
     je .end
     
+    cmp r8b, r9b
+    je .while
+
     xor r8b, r9b
     cmp r8b, 32
-    jne .end
-    jmp .while
+    je .while
 
     .end:
-    xor rax, rax
+GDB_HERE:
     dec rcx
     mov r8b, byte [rdi + rcx]
-    mov rax, r8
+    ;; mov rax, r8
+    ;; sub rax, r9
+    movzx rax, r8b
     sub rax, r9
     ret

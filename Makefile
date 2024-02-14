@@ -28,9 +28,13 @@ tests_run:	re $(TESTS_OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -L/usr/local/lib -lcriterion
 	./unit_tests
 
+program:	re
+	$(CC) $(CFLAGS) $(OBJS) main.c -o main
+
 clean:
 	$(RM) $(OBJS)
 	$(RM) $(TESTS_OBJS)
+	$(RM) main
 
 fclean:	clean
 	$(RM) $(NAME)
