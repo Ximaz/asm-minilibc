@@ -21,39 +21,37 @@ global memmove
 memmove:
 %endif
     mov rax, rdi
+    mov rcx, rdx
 
     cmp rdi, 0
     je .end
+
     cmp rsi, 0
     je .end
 
-    mov rax, rdi
-    cmp rdi, rsi
-    je .end             ;; rdi == rsi, nothing to do
-    jl .no_overlapping  ;; rdi <  rsi, no overlap, we safely can copy
+    sub rax, rcx
+    cmp rsi, rax
+    jle .no_overlapping
 
-    mov rcx, rsi        ;; rcx = rsi
-    add rcx, rdx        ;; rcx = rcx + rdx
-    cmp rdi, rcx
-    jge .no_overlapping ;; rdi >= rsi + rdx, no overlap, we safely can copy
+    mov rax, rdi
+    add rax, rcx
+    cmp rsi, rax
+    jle .no_overlapping
 
     .overlapping:
-    ;; when overlapping, we want to copy frmo right to left instead of left to
-    ;; right, so we make sure we're not overwriting existing data before it's
-    ;; copied into the destination buffer.
-    std              ;; sets the direction flag to 1 (right-to-left)
-    mov rcx, rdx     ;; sets the number of reps for movsb
+    mov rax, rdi
+    std
+    dec rdx
+    add rsi, rdx
+    add rdi, rdx
+    rep movsb
 
-    add rsi, rdx     ;; rsi = &rsi[rdx]
-    add rdi, rdx     ;; rdi = &rdi[rdx]
-    rep movsb        ;; movsb sets DS:SI and ES:DI by itself to copy rcx times
-
-    cld              ;; unsets the direction flag, i's now 0 (left-to-right)
+    cld
     ret
 
     .no_overlapping:
-    mov rcx, rdx     ;; sets the number of reps for movsb
-    rep movsb        ;; movsb sets DS:SI and ES:DI by itself to copy rcx times
+    mov rax, rdi
+    rep movsb
 
     .end:
     ret
