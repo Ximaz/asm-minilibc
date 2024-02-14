@@ -24,8 +24,8 @@ all:	$(NAME)
 $(NAME):	$(OBJS)
 	ld -shared $(OBJS) -o $(NAME)
 
-tests_run:	$(OBJS) $(TESTS_OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -lcriterion
+tests_run:	re $(TESTS_OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -L/usr/local/lib -lcriterion
 	./unit_tests
 
 clean:
