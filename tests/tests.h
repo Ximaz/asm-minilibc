@@ -95,7 +95,7 @@
 } while (0)
 
 /*
-Quentin DESMETTRE
+External tests
 */
 
 #include <stddef.h>

@@ -87,3 +87,23 @@ memset:
     mov [rdi+rcx], rsi
     inc rcx
     jmp .while
+
+%if CRITERION
+global _memfrob
+_memfrob:
+%else
+global memfrob
+memfrob:
+%endif
+    mov rax, rdi
+    xor rcx, rcx
+
+    .while:
+        cmp rcx, rsi
+        je .break
+        xor byte [rdi + rcx], 42
+        inc rcx
+        jmp .while
+
+    .break:
+    ret

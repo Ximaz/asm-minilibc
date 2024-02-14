@@ -1,6 +1,6 @@
 #include "tests.h"
 
-Test(ffs, basic_test) {
+Test(_ffs, basic_test) {
     int value = 0b1000000;
     int expected_result = 7;
     
