@@ -24,3 +24,11 @@ ffs:
 
     .break:
     ret
+
+%if CRITERION
+global _syscall
+_syscall:
+%else
+global syscall
+syscall:
+%endif

@@ -9,20 +9,9 @@ global memcpy
 memcpy:
 %endif
     mov rax, rdi
-
-    xor rax, rax
-    xor rcx, rcx
-
-    .while:
-    cmp rcx, rdx
-    jnz .continue
+    mov rcx, rdx
+    rep movsb
     ret
-
-    .continue:
-    mov al, [rsi*1+rcx]
-    mov byte [rdi+rcx], al
-    inc rcx
-    jmp .while
 
 %if CRITERION
 global _memmove

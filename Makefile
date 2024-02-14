@@ -8,7 +8,7 @@
 NAME		:=	libasm.so
 RM			:=	rm -rf
 NASM		:=	nasm
-NASM_FLAGS	:=	-g -Wall -Werror -f elf64 -O0 -DCRITERION=0
+NASM_FLAGS	:=	-g -Wall -Werror -f elf64 -O0 -DCRITERION=1
 CC			:=	gcc
 CFLAGS		:=	-g -Wall -Wno-nonnull -Wno-memset-transposed-args
 SRCS		:=	$(shell find src -type f -name '*.asm')
