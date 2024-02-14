@@ -20,6 +20,8 @@ _memmove:
 global memmove
 memmove:
 %endif
+    mov rax, rdi
+
     cmp rdi, 0
     je .end
     cmp rsi, 0
@@ -42,7 +44,6 @@ memmove:
     std              ;; sets the direction flag to 1 (right-to-left)
     mov rcx, rdx     ;; sets the number of reps for movsb
 
-    dec rdx          ;; rdx = rdx - 1
     add rsi, rdx     ;; rsi = &rsi[rdx]
     add rdi, rdx     ;; rdi = &rdi[rdx]
     rep movsb        ;; movsb sets DS:SI and ES:DI by itself to copy rcx times
