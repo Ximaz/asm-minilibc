@@ -22,10 +22,14 @@ strlen:
 
 %if CRITERION
 global _strchr
+global _index
 _strchr:
+_index:
 %else
 global strchr
+global index
 strchr:
+index:
 %endif
     xor rax, rax
 
