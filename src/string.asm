@@ -217,40 +217,7 @@ _strcspn:
 global strcspn
 strcspn:
 %endif
-    xor rax, rax
-    xor rcx, rcx
-    xor r8, r8  
-
-    .while:
-    cmp byte [rdi + rcx], 0
-    je .no_match_end
-    xor r8, r8
-    mov al, byte [rdi + rcx]
-    inc rcx
-
-    .check_all_rsi:
-    cmp byte [rsi + r8], 0
-    je .while
-    cmp byte [rsi + r8], al
-    je .end
-    inc r8
-    jmp .check_all_rsi
-
-    .end:
-    mov rax, r8
-    ret
-
-    .no_match_end:
-    mov rax, rcx
-    ret
-
-%if CRITERION
-global _strpbrk
-_strpbrk:
-%else
-global strpbrk
-strpbrk:
-%endif
+    xchg rdi, rsi
     xor rcx, rcx
     xor rax, rax
     mov rdx, rsi
@@ -272,6 +239,43 @@ strpbrk:
     .null_ret:
     xor rax, rax
     .return:
+    mov rsi, rdx
+    xchg rdi, rsi
+    mov rax, rcx
+    ret
+
+%if CRITERION
+global _strpbrk
+_strpbrk:
+%else
+global strpbrk
+strpbrk:
+%endif
+    push rsi
+    push rdi
+    xor rcx, rcx
+    xor rax, rax
+    mov rdx, rsi
+
+    .while:
+    movzx rsi, byte [rdx + rcx]
+    cmp rsi, 0
+    je .null_ret
+%if CRITERION
+    call _strchr
+%else
+    call strchr
+%endif
+    cmp rax, 0
+    jne .return
+    inc rcx
+    jmp .while
+
+    .null_ret:
+    xor rax, rax
+    .return:
+    pop rdi
+    pop rsi
     ret
 
 %if CRITERION

@@ -8,6 +8,8 @@ Test(_strcspn, compare_with_libc) {
     size_t result_custom = _strcspn(str1, reject1);
     size_t result_libc = strcspn(str1, reject1);
 
+    printf("%ld %ld\n", result_custom, result_libc);
+
     cr_assert_eq(result_custom, result_libc, "Custom strcspn result does not match libc strcspn.");
 
     const char* str2 = "12345";
