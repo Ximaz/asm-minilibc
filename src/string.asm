@@ -252,53 +252,26 @@ global strpbrk
 strpbrk:
 %endif
     xor rcx, rcx
-
-    %if CRITERION
-    call _strlen
-%else
-    call strlen
-%endif
-
-    cmp rax, 0
-    je .fast_end
-    mov rdx, rax
-
-    push rdi
-    mov rdi, rsi
-    %if CRITERION
-    call _strlen
-%else
-    call strlen
-%endif
-
-    pop rdi
-    cmp rax, 0
-    je .fast_end
-    mov r9, rax
     xor rax, rax
+    mov rdx, rsi
 
-    jmp .for_rcx_in_range_len_rdi
-    .increment_rcx:
+    .while:
+    movzx rsi, byte [rdx + rcx]
+    cmp rsi, 0
+    je .null_ret
+%if CRITERION
+    call _strchr
+%else
+    call strchr
+%endif
+    cmp rax, 0
+    jne .return
     inc rcx
-    .for_rcx_in_range_len_rdi:
-    xor r8, r8
-    .for_r8_in_range_len_rsi:
-    cmp r8, r9
-    je .for_rcx_in_range_len_rdi
-    mov al, byte [rdi + rcx]
-    cmp al, byte [rsi + r8]
-    je .end
-    inc r8
-    jmp .increment_rcx
+    jmp .while
 
-    .end:
-    cmp rcx, rdx
-    jge .fast_end
-    lea rax, [rdi+rcx]
-    ret
-
-    .fast_end:
+    .null_ret:
     xor rax, rax
+    .return:
     ret
 
 %if CRITERION
