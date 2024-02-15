@@ -168,45 +168,46 @@ _strstr:
 global strstr
 strstr:
 %endif
-    xchg rdi, rsi
-%if CRITERION
-    call _strlen
-%else
-    call strlen
-%endif
+    xor rcx, rcx
+    mov rax, rdi
+    cmp byte [rsi], 0
+    je .fast_return
 
-    mov rdx, rax
-    xchg rdi, rsi
+    cmp byte [rdi], 0
+    je .null_ret
 
-    cmp rax, 0
-    je .found
+    xor r8, r8
+
+    .strstr:
+    cmp byte[rdi + rcx], 0
+    je .return
+    mov rdx, 1
 
     .while:
-    cmp byte [rdi], 0
-    je .check_for_empty_needle
-%if CRITERION
-    call _strncmp
-%else
-    call strncmp
-%endif
-    cmp rax, 0
-    je .found
-    inc rdi
+    mov r8, rcx
+    add r8, rdx
+    movzx rax, byte[rdi + r8]
+    cmp byte [rsi + rdx], 0
+    je .return
+    cmp byte [rsi + rdx], al
+    je .continue
+    inc rcx
+    jmp .strstr
+
+    .continue:
+    inc rdx
     jmp .while
 
-    .check_for_empty_needle:
-    cmp byte [rsi], 0
-    je .found
-    jmp .not_found
-
-    .found:
-    cmp rax, 0
-    jne .not_found
-    mov rax, rdi
+    .null_ret:
+    xor rax, rax
     ret
 
-    .not_found:
-    xor rax, rax
+    .return:
+    cmp byte [rsi + rdx], 0
+    jne .null_ret
+
+    .fast_return:
+    lea rax, [rdi + rcx]
     ret
 
 %if CRITERION
