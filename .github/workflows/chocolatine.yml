@@ -1,0 +1,55 @@
+name: chocolatine
+
+env:
+  MIRROR_URL: 'git@github.com:EpitechPromo2027/B-ASM-400-LIL-4-1-asmminilibc-malo.durand.git'
+  EXECUTABLES: 'main'
+
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+      - 'ga-ignore-**'
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-**'
+
+jobs:
+  run_tests:
+    needs: check_program_compilation
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Make
+        timeout-minutes: 2
+        run: make
+
+      - name: Make Clean
+        run: make clean
+
+      - name: Run tests
+        timeout-minutes: 2
+        run: make tests_run
+
+  push_to_mirror:
+    needs: run_tests
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: 0
+
+      - name: Mirror
+        uses: pixta-dev/repository-mirroring-action@v1.1.1
+        with:
+          target_repo_url:
+            ${{ env.MIRROR_URL }}
+          ssh_private_key:
+            ${{ secrets.GIT_SSH_PRIVATE_KEY }}
