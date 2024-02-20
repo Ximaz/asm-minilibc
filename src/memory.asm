@@ -40,12 +40,11 @@ memmove:
 
     .overlapping:
     mov rax, rdi
-    std
     dec rdx
     add rsi, rdx
     add rdi, rdx
+    std
     rep movsb
-
     cld
     ret
 
