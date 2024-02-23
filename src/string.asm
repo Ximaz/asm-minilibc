@@ -169,19 +169,20 @@ global strstr
 strstr:
 %endif
     xor rcx, rcx
+    xor rdx, rdx
     mov rax, rdi
     cmp byte [rsi], 0
     je .fast_return
 
     cmp byte [rdi], 0
-    je .null_ret
+    je .return
 
     xor r8, r8
 
     .strstr:
     cmp byte[rdi + rcx], 0
     je .return
-    mov rdx, 1
+    xor rdx, rdx
 
     .while:
     mov r8, rcx
@@ -300,7 +301,7 @@ strcasecmp:
 
     cmp r9b, 0
     je .end
-    
+
     cmp r8b, r9b
     je .while
 
