@@ -27,6 +27,7 @@ memmove:
     jl .overlapping
 
     rep movsb
+    ret
 
     .overlapping:
     dec rdx
