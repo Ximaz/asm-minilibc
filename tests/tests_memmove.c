@@ -34,3 +34,12 @@ Test(_memmove, compare_with_libc) {
 Test(_memmove, null_pointers) {
     CMP_CRASH_3(memmove, _memmove, NULL, NULL, 3);
 }
+
+Test(memmove, overlapping) {
+    char buffer_custom[] = "123456789";
+    char buffer_libc[] = "123456789";
+
+    _memmove(buffer_custom + 3, buffer_custom, 6);
+    memmove(buffer_libc + 3, buffer_libc, 6);
+    cr_assert_str_eq(buffer_custom, buffer_libc, "Custom memmove does not match libc memmove");
+}

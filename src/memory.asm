@@ -23,37 +23,18 @@ memmove:
     mov rax, rdi
     mov rcx, rdx
 
-    cmp rdi, 0
-    je .end
+    cmp rsi, rdi
+    jl .overlapping
 
-    cmp rsi, 0
-    je .end
-
-    sub rax, rcx
-    cmp rsi, rax
-    jle .no_overlapping
-
-    mov rax, rdi
-    add rax, rcx
-    cmp rsi, rax
-    jle .no_overlapping
+    rep movsb
 
     .overlapping:
-    mov rax, rdi
-    std
     dec rdx
     add rsi, rdx
     add rdi, rdx
+    std
     rep movsb
-
     cld
-    ret
-
-    .no_overlapping:
-    mov rax, rdi
-    rep movsb
-
-    .end:
     ret
 
 %if CRITERION
