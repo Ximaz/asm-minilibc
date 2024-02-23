@@ -25,7 +25,8 @@ $(NAME):	$(OBJS)
 	ld -shared $(OBJS) -o $(NAME)
 
 tests_run:	re $(TESTS_OBJS)
-	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -L/usr/local/lib -lcriterion
+	$(CC) $(CFLAGS) $(OBJS) $(TESTS_OBJS) -o unit_tests -L/usr/local/lib \
+	-lcriterion
 	./unit_tests
 
 program:	re
