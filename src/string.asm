@@ -181,7 +181,7 @@ strstr:
     .strstr:
     cmp byte[rdi + rcx], 0
     je .return
-    mov rdx, 1
+    xor rdx, rdx
 
     .while:
     mov r8, rcx
