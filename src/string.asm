@@ -251,31 +251,35 @@ _strpbrk:
 global strpbrk
 strpbrk:
 %endif
-    push rsi
-    push rdi
-    xor rcx, rcx
     xor rax, rax
-    mov rdx, rsi
+    xor rcx, rcx
+    xor r8, r8
 
-    .while:
-    movzx rsi, byte [rdx + rcx]
-    cmp rsi, 0
+    .while_needle_not_in_haystack:
+    cmp byte [rdi + rcx], 0
     je .null_ret
-%if CRITERION
-    call _strchr
-%else
-    call strchr
-%endif
-    cmp rax, 0
-    jne .return
+
+    mov al, byte [rdi + rcx]
+    cmp al, byte [rsi + r8]
+    je .return
+
+    cmp byte [rsi + r8], 0
+    je .reset_needle_idx
+
+    inc r8
+    jmp .while_needle_not_in_haystack
+
+    .reset_needle_idx:
     inc rcx
-    jmp .while
+    xor r8, r8
+    jmp .while_needle_not_in_haystack
+
+    .return:
+    lea rax, [rdi + rcx]
+    ret
 
     .null_ret:
     xor rax, rax
-    .return:
-    pop rdi
-    pop rsi
     ret
 
 %if CRITERION
